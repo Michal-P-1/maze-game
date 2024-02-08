@@ -15,8 +15,6 @@ class MazePattern {
 
     displayMazeMap() {
         const mazeElement = document.getElementById("maze-map");
-        mazeElement.textContent = "";
-        console.log(mazeElement);
 
         // Get map size
         this.mazeSize(this.mazeMap1);
@@ -25,6 +23,7 @@ class MazePattern {
             const mapLine = document.createElement("div");
             mapLine.classList.add("map-line");
             // mazeElement.append(lineBreak);
+            console.log(this.playerPosition.length);
             for (let j = 0; j < this.width; j++) {
                 // Get every individual tile of the map
                 let mapTile = this.mazeMap1[i][j];
@@ -40,16 +39,7 @@ class MazePattern {
                     this.playerPosition = [i, j];
                     newSpan.classList.add("player");
                 }
-                // } else if (this.playerPosition.length !== 0) {
-                //     // const newSpanPlayer = document.createElement("span");
-                //     const currentPlayerTile = document.getElementById(
-                //         this.playerPosition.toString().replace(",", "")
-                //     );
-                //     console.log(currentPlayerTile);
 
-                //     // currentPlayerTile.replaceWith(newSpanPlayer);
-                //     // newSpanPlayer.classList.add("player");
-                // }
                 // Add ID to every span element
                 newSpan.id = `${[i]}${[j]}`;
                 // Append map tile to the mapline element
@@ -58,6 +48,17 @@ class MazePattern {
             // Apend mapline to the maze element
             mazeElement.append(mapLine);
         }
+    }
+
+    movePlayer() {
+        const mazeElement = document.getElementById("maze-map");
+        const oldPlayerPositionEl = document.querySelector(".player");
+        oldPlayerPositionEl.classList.remove("player");
+        oldPlayerPositionEl.classList.add("tile");
+        const newPlayerPositionEl = document.getElementById(
+            this.playerPosition.toString().replace(",", "")
+        );
+        newPlayerPositionEl.classList.add("player");
     }
 
     playerMoveRigth() {
@@ -94,16 +95,19 @@ document.addEventListener("keydown", (event) => {
     switch (pressedKey) {
         case "ArrowRight":
             test.playerMoveRigth();
-            // test.displayMazeMap();
+            test.movePlayer();
             break;
         case "ArrowLeft":
             test.playerMoveLeft();
+            test.movePlayer();
             break;
         case "ArrowDown":
             test.playerMoveDown();
+            test.movePlayer();
             break;
         case "ArrowUp":
             test.playerMoveUp();
+            test.movePlayer();
     }
 
     // if (event.key === "ArrowRight") {
