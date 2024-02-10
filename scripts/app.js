@@ -1,19 +1,25 @@
-class MazePattern {
+class Maze {
     mazeMap1 = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 1],
-        [1, 5, 0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, "*", 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, "P", 0, 0, 0, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1],
     ];
     playerPosition = [];
+
+    get playerPosition() {
+        return this.playerPosition;
+    }
 
     mazeSize(maze) {
         this.length = maze.length;
         this.width = maze[0].length;
     }
 
-    displayMazeMap() {
+    display() {
         const mazeElement = document.getElementById("maze-map");
 
         // Get map size
@@ -23,19 +29,21 @@ class MazePattern {
             const mapLine = document.createElement("div");
             mapLine.classList.add("map-line");
             // mazeElement.append(lineBreak);
-            console.log(this.playerPosition.length);
             for (let j = 0; j < this.width; j++) {
                 // Get every individual tile of the map
                 let mapTile = this.mazeMap1[i][j];
                 // Create a new html span element for every square
                 const newSpan = document.createElement("span");
-                if (mapTile === 1) {
-                    newSpan.classList.add("wall");
-                }
                 if (mapTile === 0) {
                     newSpan.classList.add("tile");
                 }
-                if (mapTile === 5 && this.playerPosition.length === 0) {
+                if (mapTile === 1) {
+                    newSpan.classList.add("wall");
+                }
+                if (mapTile === "*") {
+                    newSpan.classList.add("reward");
+                }
+                if (mapTile === "P" && this.playerPosition.length === 0) {
                     this.playerPosition = [i, j];
                     newSpan.classList.add("player");
                 }
@@ -45,73 +53,145 @@ class MazePattern {
                 // Append map tile to the mapline element
                 mapLine.append(newSpan);
             }
+
             // Apend mapline to the maze element
             mazeElement.append(mapLine);
         }
     }
+}
 
-    movePlayer() {
-        const mazeElement = document.getElementById("maze-map");
+class Player {
+    constructor(position) {
+        this.playerPosition = position;
+    }
+
+    remove(oldPlayerPosition) {
+        oldPlayerPosition.classList.remove("player");
+        oldPlayerPosition.classList.add("tile");
+    }
+
+    add(newPlayerPosition) {
+        newPlayerPosition.classList.add("player");
+    }
+
+    updateMap() {
+        // Get old player position
         const oldPlayerPositionEl = document.querySelector(".player");
-        oldPlayerPositionEl.classList.remove("player");
-        oldPlayerPositionEl.classList.add("tile");
+        // Remove old position
+        this.remove(oldPlayerPositionEl);
+
+        // Get new player position
         const newPlayerPositionEl = document.getElementById(
             this.playerPosition.toString().replace(",", "")
         );
-        newPlayerPositionEl.classList.add("player");
+        // Add a new plyer position on the maze
+        this.add(newPlayerPositionEl);
     }
 
-    playerMoveRigth() {
-        // console.log(this.playerPosition);
-        this.playerPosition[1] += 1;
-        console.log(this.playerPosition);
+    checkIfMovePosible(posElement0, nextStepPos0, posElement1, nextStepPos1) {
+        // Copy the cur player position
+        const curPlayerPos = [...this.playerPosition];
+
+        // Get the future tile
+        const futureTile = document.getElementById(
+            `${(curPlayerPos[posElement0] += nextStepPos0)}${(curPlayerPos[
+                posElement1
+            ] += nextStepPos1)}`
+        );
+
+        // Check if the future tile is a wall
+        if (futureTile.className === "wall") {
+            return 0;
+        }
     }
 
-    playerMoveLeft() {
-        // console.log(this.playerPosition);
-        this.playerPosition[1] -= 1;
-        console.log(this.playerPosition);
+    moveRigth() {
+        if (this.checkIfMovePosible(0, 0, 1, 1) !== 0) {
+            this.playerPosition[1] += 1;
+        }
     }
 
-    playerMoveUp() {
-        // console.log(this.playerPosition);
-        this.playerPosition[0] -= 1;
-        console.log(this.playerPosition);
+    moveLeft() {
+        if (this.checkIfMovePosible(0, 0, 1, -1) !== 0) {
+            this.playerPosition[1] -= 1;
+        }
     }
 
-    playerMoveDown() {
-        // console.log(this.playerPosition);
-        this.playerPosition[0] += 1;
-        console.log(this.playerPosition);
+    moveUp() {
+        if (this.checkIfMovePosible(0, -1, 1, 0) !== 0) {
+            this.playerPosition[0] -= 1;
+        }
+    }
+
+    moveDown() {
+        if (this.checkIfMovePosible(0, 1, 1, 0) !== 0) {
+            this.playerPosition[0] += 1;
+        }
     }
 }
 
-const test = new MazePattern();
-test.displayMazeMap();
-// test.playerMove();
+class Score {
+    points = 0;
 
-document.addEventListener("keydown", (event) => {
-    let pressedKey = event.key;
-    switch (pressedKey) {
-        case "ArrowRight":
-            test.playerMoveRigth();
-            test.movePlayer();
-            break;
-        case "ArrowLeft":
-            test.playerMoveLeft();
-            test.movePlayer();
-            break;
-        case "ArrowDown":
-            test.playerMoveDown();
-            test.movePlayer();
-            break;
-        case "ArrowUp":
-            test.playerMoveUp();
-            test.movePlayer();
+    addPoints(playerPos) {
+        const playerPosTile = document.getElementById(
+            `${playerPos[0]}${playerPos[1]}`
+        );
+
+        if (playerPosTile.classList.contains("reward")) {
+            playerPosTile.classList.remove("reward");
+            this.points += 150;
+        }
+
+        return this.points;
+    }
+}
+
+class App {
+    // Display maze
+    static init() {
+        const maze = new Maze();
+        maze.display();
+        this.playerPosition = maze.playerPosition;
     }
 
-    // if (event.key === "ArrowRight") {
-    //     console.log("rigth");
-    // }
-    // console.log(event.key);
-});
+    static updateScore() {
+        this.currentScoreP1.addPoints(this.playerPosition);
+    }
+
+    // Player movement logic
+    static playerMovement() {
+        const player1 = new Player(this.playerPosition);
+        this.currentScoreP1 = new Score();
+
+        document.addEventListener("keydown", (event) => {
+            let pressedKey = event.key;
+            switch (pressedKey) {
+                case "ArrowRight":
+                    player1.moveRigth();
+                    player1.updateMap();
+                    this.updateScore();
+                    break;
+                case "ArrowLeft":
+                    player1.moveLeft();
+                    player1.updateMap();
+                    this.updateScore();
+                    break;
+                case "ArrowDown":
+                    player1.moveDown();
+                    player1.updateMap();
+                    this.updateScore();
+                    break;
+                case "ArrowUp":
+                    player1.moveUp();
+                    player1.updateMap();
+                    this.updateScore();
+            }
+        });
+    }
+}
+
+App.init();
+App.playerMovement();
+App.updateScore();
+// test.playerMove();
