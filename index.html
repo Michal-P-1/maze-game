@@ -8,9 +8,35 @@
         <script src="scripts/app.js" defer></script>
     </head>
     <body>
-        <section id="maze-map">
-            <!-- <div class="maze-tile"></div>
+        <main class="main">
+            <h1>Score</h1>
+            <section class="board">
+                <div class="board__div">
+                    <h2>Player1</h2>
+                    <div class="score__div">
+                        <p id="player1-score">0</p>
+                        <p class="player-moves">(0)</p>
+                    </div>
+                    <!-- <span id="player1-moves">(0)</span> -->
+                </div>
+                <div class="board__div">
+                    <h2>Player2</h2>
+                    <div class="score__div">
+                        <p id="player2-score">0</p>
+                        <p class="player-moves">(0)</p>
+                    </div>
+
+                    <!--  -->
+                </div>
+            </section>
+            <section id="maze__section">
+                <div class="game-result hide"></div>
+                <div id="maze-map">
+                    <!-- <div class="maze-tile"></div>
             <div class="maze-wall"></div> -->
-        </section>
+                </div>
+            </section>
+            <h3 class="hide">Press space to reset</h3>
+        </main>
     </body>
 </html>

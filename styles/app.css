@@ -1,11 +1,47 @@
+/* || Reset default */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* ||  */
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
+/* ||  */
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
+.main {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    /* height: 100%; */
+}
+
+#maze__section {
+    position: relative;
+    width: 100%;
 }
 
 #maze-map {
     display: flex;
+    position: relative;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -14,27 +50,93 @@
 .map-line {
     margin: 0;
     padding: 0;
-    height: 40px;
+    height: 50px;
 }
 
 .tile,
 .wall,
-.player,
+.player1,
+.player2,
 .reward {
     display: inline-block;
     background-color: rgb(146, 240, 240);
-    width: 40px;
+    width: 50px;
     height: 100%;
 }
 
-.wall {
-    background-color: rgb(22, 23, 23);
+.tile {
+    background-image: url("../images/tiles.png");
 }
 
-.player {
-    background-color: rgb(79, 163, 100);
+.wall {
+    background-image: url("../images/pitch_tile.png");
+}
+
+.player1 {
+    background-image: url("../images/l.png");
+}
+
+.player2 {
+    background-image: url("../images/m.png");
 }
 
 .reward {
-    background-color: rgb(176, 88, 88);
+    background-image: url("../images/reward.png");
+}
+
+.board {
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
+}
+
+.board__div {
+    margin: 1rem 2rem 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.score__div {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+#player1-score,
+#player2-score {
+    height: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: x-large;
+    color: rgb(133, 7, 7);
+}
+
+.player-moves {
+    font-size: medium;
+    color: rgb(133, 7, 7);
+}
+
+.game-result {
+    margin: auto;
+    background-color: black;
+    width: 100%;
+    height: 7rem;
+    line-height: 7rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    color: white;
+    text-align: center;
+    font-size: x-large;
+}
+
+h3 {
+    padding-top: 3rem;
+    text-align: center;
+    width: 100%;
+    color: rgb(218, 3, 3);
 }
