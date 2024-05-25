@@ -1,3 +1,8 @@
-const currentYearElement = document.querySelector(".current-year");
+function setCurrentYear() {
+    console.log("Ho");
+    const currentYearElemennt = document.querySelector(".current-year");
 
-currentYearElement.textContent = new Date().getFullYear();
+    currentYearElemennt.textContent = new Date().getFullYear();
+}
+
+setCurrentYear();
